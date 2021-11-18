@@ -22,6 +22,32 @@ public class JpaMain {
             member.setUsername("member");
             member.setAge(10);
             member.setTeam(team);
+            member.setMemberType(MemberType.ADMIN);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m.username,'HELLO',TRUE,m.memberType from Member m where m.memberType = :userType"; // on 절을 이용하여 조건을 걸어줌
+            List<Object[]> resultList = em.createQuery(query)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+
+            for (Object[] objects : resultList) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+                System.out.println("objects[3] = " + objects[3]);
+            }
+
+            /*Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member");
+            member.setAge(10);
+            member.setTeam(team);
             em.persist(member);
 
             em.flush();
@@ -31,7 +57,7 @@ public class JpaMain {
             List<Member> resultList = em.createQuery(query, Member.class)
                     .getResultList();
 
-            System.out.println("resultList.size() = " + resultList.size());
+            System.out.println("resultList.size() = " + resultList.size());*/
 
             /* for (int i = 0; i < 100; i++) {
                 Member member = new Member();
