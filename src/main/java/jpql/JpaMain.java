@@ -14,7 +14,26 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            for (int i = 0; i < 100; i++) {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member");
+            member.setAge(10);
+            member.setTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m from Member m left join m.team t on t.name = 'teamA'"; // on 절을 이용하여 조건을 걸어줌
+            List<Member> resultList = em.createQuery(query, Member.class)
+                    .getResultList();
+
+            System.out.println("resultList.size() = " + resultList.size());
+
+            /* for (int i = 0; i < 100; i++) {
                 Member member = new Member();
                 member.setUsername("member" + i);
                 member.setAge(i);
@@ -32,7 +51,7 @@ public class JpaMain {
             System.out.println("resultList.size() = " + resultList.size());
             for (Member member1 : resultList) {
                 System.out.println("member1 = " + member1);
-            }
+            }*/
 
             /* Member member = new Member();
             member.setUsername("member1");
