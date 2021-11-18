@@ -14,7 +14,25 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            Team team = new Team();
+            Member member1 = new Member();
+            member1.setUsername("관리자1");
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            String query = "SELECT function('group_concat', m.username) From Member m";
+
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+            for (String s : resultList) {
+                System.out.println("s = " + s);
+            }
+            /* Team team = new Team();
             team.setName("teamA");
             em.persist(team);
 
@@ -33,7 +51,7 @@ public class JpaMain {
 
             for (String s : resultList) {
                 System.out.println("s = " + s);
-            }
+            }*/
 
             /* Team team = new Team();
             team.setName("teamA");
