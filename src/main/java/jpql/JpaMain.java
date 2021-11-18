@@ -19,6 +19,27 @@ public class JpaMain {
             em.persist(team);
 
             Member member = new Member();
+            member.setUsername("관리자");
+            member.setAge(12);
+            member.setTeam(team);
+            member.setMemberType(MemberType.ADMIN);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select nullif(m.username, '관리자2') from Member m";
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+            for (String s : resultList) {
+                System.out.println("s = " + s);
+            }
+
+            /* Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
             member.setUsername("member");
             member.setAge(10);
             member.setTeam(team);
@@ -38,7 +59,7 @@ public class JpaMain {
                 System.out.println("objects[1] = " + objects[1]);
                 System.out.println("objects[2] = " + objects[2]);
                 System.out.println("objects[3] = " + objects[3]);
-            }
+            }*/
 
             /*Team team = new Team();
             team.setName("teamA");
