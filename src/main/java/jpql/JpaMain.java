@@ -16,6 +16,23 @@ public class JpaMain {
         try {
             Member member = new Member();
             member.setUsername("member1");
+            member.setAge(10);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                    .getResultList();// 엔티티 프로젝션에서 나온 결과든은 영속성 컨텍스트가 관리를 해준다.
+
+            MemberDTO memberDTO = resultList.get(0);
+
+            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
+            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
+
+
+            /* Member member = new Member();
+            member.setUsername("member1");
             em.persist(member);
 
             TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class); // 타입정보를 명확하게 가지고있음.
@@ -26,7 +43,7 @@ public class JpaMain {
 
             for (Member member1 : resultList) {
                 System.out.println("member1 = " + member1);
-            }
+            }*/
 
             tx.commit();
         } catch (Exception e){
