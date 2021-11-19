@@ -14,7 +14,43 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
+
             Team teamA = new Team();
+            teamA.setName("팀 A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀 B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "회원4")
+                    .getResultList();
+
+            for (Member member : resultList) {
+                System.out.println("member = " + member);
+            }
+
+            // 엔티티 직접 사용 예제
+            /* Team teamA = new Team();
             teamA.setName("팀 A");
             em.persist(teamA);
 
@@ -47,7 +83,7 @@ public class JpaMain {
 
             for (Member member : members) {
                 System.out.println("member = " + member);
-            }
+            }*/
 
             // 페치 조인 2 - 한계
             /* Team teamA = new Team();

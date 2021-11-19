@@ -3,6 +3,10 @@ package jpql;
 import javax.persistence.*;
 
 @Entity
+@NamedQuery( // 네임드 쿼리 ( 정적 쿼리 ) // 실무에서는 @NamedQuery는 잘 쓰이지 않음 + 실무에서는 Spring DataJPA를 사용하고 그 안에서 @Query 어노테이션을 사용함.
+        name = "Member.findByUsername", // 관례상 Member 라고 적는다.
+        query = "select m from Member m where m.username = :username"
+)
 public class Member {
 
     @Id @GeneratedValue
