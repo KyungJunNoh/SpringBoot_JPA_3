@@ -16,7 +16,67 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            for (int i = 0; i < 100; i++) { // 100명의 회원정보를 삽입
+            Team teamA = new Team();
+            teamA.setName("팀 A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀 B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            String query = "select distinct t From Team t join fetch t.members"; // 실무에서 묵시적 조인은 치명적이다. 명시적 조인 ( 직접 조인 해주는것 ) 을 습관화 하자
+
+            List<Team> resultList = em.createQuery(query, Team.class).getResultList();
+
+            System.out.println("resultList = " + resultList.size());
+
+            for (Team team : resultList) {
+                System.out.println("team = " + team.getName() + ", ");
+                for (Member member : team.getMembers()) {
+                    System.out.println("member = " + member);
+                }
+            };
+
+            /* Member member1 = new Member();
+            member1.setUsername("관리자1");
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            String query = "SELECT function('group_concat', m.username) From Member m";
+
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+            for (String s : resultList) {
+                System.out.println("s = " + s);
+            }
+
+
+            // 페치조인 - 기본 ( N+1 문제 해결 ) 예제 2
+            /* for (int i = 0; i < 100; i++) { // 100명의 회원정보를 삽입
                 Team team = new Team();
                 team.setName("팀" + i);
                 em.persist(team);
@@ -40,9 +100,9 @@ public class JpaMain {
                     // 페치 조인으로 팀과 회원을 함께 조회해서 지연 로딩 발생 안함
                     System.out.println("member = " + member.getUsername());
                 }
-            }
+            }*/
 
-            // 페치조인 - 기본 ( N+1 문제 해결 )
+            // 페치조인 - 기본 ( N+1 문제 해결 ) 예제 1
             /* for (int i = 0; i < 100; i++) { // 100명의 회원정보를 삽입
                 Team team = new Team();
                 team.setName("팀" + i);
