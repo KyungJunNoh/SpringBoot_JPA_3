@@ -42,6 +42,49 @@ public class JpaMain {
             em.flush();
             em.clear();
 
+            String query = "select t From Team t";
+
+            List<Team> resultList = em.createQuery(query, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(2)
+                    .getResultList();
+
+            System.out.println("resultList = " + resultList.size());
+
+            for (Team team : resultList) {
+                System.out.println("team = " + team.getName() + ", ");
+                for (Member member : team.getMembers()) {
+                    System.out.println("member = " + member);
+                }
+            };
+
+            // 페치 조인 - 기본
+            /* Team teamA = new Team();
+            teamA.setName("팀 A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀 B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
             String query = "select distinct t From Team t join fetch t.members"; // 실무에서 묵시적 조인은 치명적이다. 명시적 조인 ( 직접 조인 해주는것 ) 을 습관화 하자
 
             List<Team> resultList = em.createQuery(query, Team.class).getResultList();
@@ -53,7 +96,7 @@ public class JpaMain {
                 for (Member member : team.getMembers()) {
                     System.out.println("member = " + member);
                 }
-            };
+            };*/
 
             /* Member member1 = new Member();
             member1.setUsername("관리자1");

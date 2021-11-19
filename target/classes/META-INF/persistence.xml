@@ -16,6 +16,7 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="10"/>
             <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.default_batch_fetch_size" value="100"/> <!-- @BatchSize를 대체하여 사용한는 것 ( 실무에서는 거의 다 이렇게 지정되어 있다. ) -->
         </properties>
     </persistence-unit>
 </persistence>
