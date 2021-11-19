@@ -14,8 +14,51 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-
+            // 벌크 연산 ( 자바 ORM 표준 JPA 프로그래밍 - 기본편 [완강] )
             Team teamA = new Team();
+            teamA.setName("팀 A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀 B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+
+            int resultCount = em.createQuery("update Member m set m.age = 20") // 모든 회원의 나이를 20살로 Update
+                    .executeUpdate();
+            System.out.println("resultCount = " + resultCount);
+
+            em.clear(); // 클리어를 해주지 않으면 영속성 컨텍스트 안에 있는 멤버를 가져와서, 업데이트가 된 값이 아닌 나이가 0살로 가져와 버리는 상황이 연출됨.
+
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("findMember.getAge() = " + findMember.getAge()); // 결과 : 20
+
+
+//            List<Member> resultList = em.createQuery("select m from Member m", Member.class) //
+//                    .getResultList();
+//
+//
+//            for (Member member : resultList) {
+//                System.out.println("member.getUsername() = " + member.getUsername() + ", " + "member.getAge() = " + member.getAge() );
+//            }
+
+            // Named 쿼리
+            /* Team teamA = new Team();
             teamA.setName("팀 A");
             em.persist(teamA);
 
@@ -42,12 +85,12 @@ public class JpaMain {
             em.clear();
 
             List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-                    .setParameter("username", "회원4")
+                    .setParameter("username", "회원1")
                     .getResultList();
 
             for (Member member : resultList) {
                 System.out.println("member = " + member);
-            }
+            }*/
 
             // 엔티티 직접 사용 예제
             /* Team teamA = new Team();
