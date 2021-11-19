@@ -16,7 +16,29 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            Team team = new Team();
+            for (int i = 0; i < 100; i++) { // 100명의 회원정보를 삽입
+                Team team = new Team();
+                team.setName("팀" + i);
+                em.persist(team);
+
+                Member member = new Member();
+                member.setUsername("회원" + i);
+                member.setTeam(team);
+                em.persist(member);
+            }
+
+            em.flush();
+            em.clear();
+
+            String query = "select m from Member m join fetch m.team"; // join fetch 를 써줌으로써 N+1 문제 해결
+
+            List<Member> resultList = em.createQuery(query, Member.class).getResultList(); // Member를 Select 했을때 이미 Team은 프록시 객체가 아닌 찐 객체로 들어가졌다.
+
+            for (Member member : resultList) {
+                System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
+            }
+
+            /* Team team = new Team();
             em.persist(team);
 
             Member member1 = new Member();
@@ -36,7 +58,7 @@ public class JpaMain {
 
             List<Long> resultList = em.createQuery(query, Long.class).getResultList();
 
-            System.out.println("resultList = " + resultList);
+            System.out.println("resultList = " + resultList);*/
 
             /* Member member1 = new Member();
             member1.setUsername("관리자1");
