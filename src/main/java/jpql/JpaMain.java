@@ -1,6 +1,8 @@
 package jpql;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -14,7 +16,29 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
+            Team team = new Team();
+            em.persist(team);
+
             Member member1 = new Member();
+            member1.setUsername("관리자1");
+            member1.setTeam(team);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            member2.setTeam(team);
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            String query = "SELECT m.id From Team t join t.members m"; // 실무에서 묵시적 조인은 치명적이다. 명시적 조인 ( 직접 조인 해주는것 ) 을 습관화 하자
+
+            List<Long> resultList = em.createQuery(query, Long.class).getResultList();
+
+            System.out.println("resultList = " + resultList);
+
+            /* Member member1 = new Member();
             member1.setUsername("관리자1");
             em.persist(member1);
 
@@ -31,7 +55,8 @@ public class JpaMain {
 
             for (String s : resultList) {
                 System.out.println("s = " + s);
-            }
+            } */
+
             /* Team team = new Team();
             team.setName("teamA");
             em.persist(team);
